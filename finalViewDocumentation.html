@@ -1,0 +1,832 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Mint Remittance Documentation</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <style>
+    :root {
+      --primary: #2563eb;
+      --bg-light: #f8fafc;
+      --border: #e5e7eb;
+      --text-dark: #111827;
+      --text-muted: #6b7280;
+    }
+
+    * {
+      box-sizing: border-box;
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    }
+
+    body {
+      margin: 0;
+      background: white;
+      color: var(--text-dark);
+    }
+
+    .layout {
+      display: flex;
+      height: 100vh;
+    }
+
+    /* Sidebar */
+    .sidebar {
+      width: 260px;
+      background: var(--bg-light);
+      border-right: 1px solid var(--border);
+      padding: 20px;
+      overflow-y: auto;
+    }
+
+    .sidebar strong {
+      display: block;
+      margin-bottom: 20px;
+    }
+
+    .sidebar h3 {
+      font-size: 13px;
+      margin: 20px 0 8px;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.4px;
+    }
+
+    .sidebar a {
+      display: block;
+      padding: 8px 10px;
+      font-size: 14px;
+      color: var(--text-dark);
+      text-decoration: none;
+      border-radius: 6px;
+      cursor: pointer;
+    }
+
+    .sidebar a.active,
+    .sidebar a:hover {
+      background: #e0e7ff;
+      color: var(--primary);
+    }
+
+    /* Content */
+    .content {
+      flex: 1;
+      padding: 32px;
+      overflow-y: auto;
+    }
+
+    .content-inner {
+      max-width: 920px;
+      margin: 0 auto;
+    }
+
+    /* Right Sidebar - Table of Contents */
+    .toc-sidebar {
+      width: 240px;
+      background: var(--bg-light);
+      border-left: 1px solid var(--border);
+      padding: 20px;
+      overflow-y: auto;
+      position: sticky;
+      top: 0;
+      height: 100vh;
+      align-self: flex-start;
+    }
+
+    .toc-sidebar h3 {
+      font-size: 13px;
+      margin: 0 0 16px 0;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.4px;
+      font-weight: 600;
+    }
+
+    .toc-list {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+    }
+
+    .toc-list li {
+      margin-bottom: 8px;
+      line-height: 1.5;
+    }
+
+    .toc-list a {
+      display: block;
+      padding: 4px 0;
+      font-size: 13px;
+      color: var(--text-dark);
+      text-decoration: none;
+      transition: color 0.2s;
+    }
+
+    .toc-list a:hover {
+      color: var(--primary);
+    }
+
+    .toc-list a.active {
+      color: var(--primary);
+      font-weight: 600;
+      position: relative;
+    }
+
+    .toc-list a.active::before {
+      content: "";
+      position: absolute;
+      left: -8px;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 3px;
+      height: 16px;
+      background: var(--primary);
+      border-radius: 2px;
+    }
+
+    .toc-list .toc-level-1 {
+      font-weight: 500;
+      margin-top: 12px;
+    }
+
+    .toc-list .toc-level-1:first-child {
+      margin-top: 0;
+    }
+
+    .toc-list .toc-level-2 {
+      padding-left: 16px;
+      font-size: 12px;
+      color: var(--text-muted);
+    }
+
+    .toc-list .toc-level-3 {
+      padding-left: 32px;
+      font-size: 12px;
+      color: var(--text-muted);
+    }
+
+    .toc-list .toc-level-4 {
+      padding-left: 48px;
+      font-size: 12px;
+      color: var(--text-muted);
+    }
+
+    .breadcrumb {
+      font-size: 13px;
+      color: var(--text-muted);
+      margin-bottom: 20px;
+    }
+
+    .breadcrumb span {
+      color: var(--primary);
+    }
+
+    section {
+      display: none;
+    }
+
+    section.active {
+      display: block;
+    }
+
+    h1 {
+      font-size: 32px;
+      margin-bottom: 20px;
+    }
+
+    h2 {
+      margin-top: 32px;
+    }
+
+    p {
+      font-size: 15px;
+      line-height: 1.7;
+      margin-bottom: 16px;
+    }
+
+    ul, ol {
+      padding-left: 20px;
+    }
+
+    li {
+      margin-bottom: 8px;
+      line-height: 1.6;
+    }
+
+    hr {
+      border: none;
+      border-top: 1px solid var(--border);
+      margin: 32px 0;
+    }
+
+    @media (max-width: 1200px) {
+      .toc-sidebar {
+        display: none;
+      }
+    }
+
+    @media (max-width: 768px) {
+      .sidebar {
+        display: none;
+      }
+    }
+  </style>
+</head>
+
+<body>
+<div class="layout">
+
+  <!-- Sidebar -->
+  <aside class="sidebar">
+    <strong>Network › Mint</strong>
+
+    <h3>Overview</h3>
+    <a class="nav-link active" data-target="overview">Overview</a>
+
+    <h3>System Architecture</h3>
+    <a class="nav-link" data-target="architecture">System Architecture</a>
+
+    <h3>Functional Flows</h3>
+    <a class="nav-link" data-target="ff-overview">Overview</a>
+    <a class="nav-link" data-target="validation-flow">Transaction Validation</a>
+    <a class="nav-link" data-target="initiation-flow">Initiation & Funds Movement</a>
+    <a class="nav-link" data-target="monitoring-flow">Monitoring & Lifecycle</a>
+  </aside>
+
+  <!-- Main Content -->
+  <main class="content">
+    <div class="content-inner">
+
+      <div class="breadcrumb">
+        Home › <span id="breadcrumb">Overview</span>
+      </div>
+
+      <!-- ================= OVERVIEW ================= -->
+      <section id="overview" class="active">
+  
+
+       <h1>Overview</h1>
+
+      <p>
+    <strong>Remittance SDK</strong> is a B2B-focused remittance orchestration solution developed by
+    <strong>MINT</strong> to enable merchant platforms to perform cross-border money transfers
+    efficiently, compliantly, and with optimal foreign exchange outcomes.
+  </p>
+
+  <p>
+    The SDK eliminates the need for merchants to integrate directly with individual remittance
+    rails by dynamically discovering real-time exchange rates and routing transactions through
+    the most suitable rail network for a given source–destination corridor.
+  </p>
+
+  <p>
+    Acting as an intermediary abstraction layer, the Remittance SDK connects merchant
+    applications with MINT’s backend, which in turn integrates with multiple external rail
+    providers and compliance services, enabling faster integration and reduced operational
+    complexity.
+  </p>
+	<h2 id="background">1. Background and Evolution</h2>
+
+  <p>
+    In traditional remittance models, merchants typically integrate with a single remittance
+    rail provider and rely entirely on that provider’s pricing, corridor availability, and
+    operational constraints. This approach introduces vendor lock-in and limits the merchant’s
+    ability to respond to fluctuating exchange rates and corridor-specific performance.
+  </p>
+
+  <p>
+    As cross-border remittance ecosystems have grown more fragmented, no single rail consistently
+    offers the best exchange rate or coverage across all corridors. This fragmentation necessitated
+    a platform-driven approach capable of evaluating multiple rails in real time.
+  </p>
+
+  <p>
+    The Remittance SDK evolved to address this challenge by decoupling merchant applications from
+    individual rail providers and introducing intelligent, corridor-aware routing managed centrally
+    by the MINT platform.
+  </p>
+
+  <hr>
+  
+  <h2 id="purpose">2. Purpose of the Service</h2>
+
+  <p>
+    The primary purpose of the Remittance SDK is to abstract remittance orchestration, FX rate
+    discovery, routing logic, and regulatory compliance checks behind a single, consistent SDK
+    interface for merchant developers.
+  </p>
+
+  <p>
+    Upon invocation, the SDK initiates real-time FX rate discovery and determines the optimal rail
+    network for the transaction. It also triggers AML compliance checks by invoking NI APIs,
+    ensuring regulatory adherence before the transaction proceeds.
+  </p>
+
+  <p>
+    The SDK does not manage retries or fallback scenarios. Its responsibility is limited to
+    real-time routing, compliance validation, and secure transaction initiation, while downstream
+    execution remains the responsibility of the selected rail network.
+  </p>
+
+  <hr>
+  
+  <h2 id="ecosystem">3. Position in the Ecosystem</h2>
+
+  <p>
+    The Remittance SDK functions as a middleware orchestration layer between merchant platforms
+    and global remittance rail providers.
+  </p>
+
+  <ol>
+    <li>The merchant application invokes the Remittance SDK to initiate a remittance transaction.</li>
+    <li>The SDK communicates securely with the MINT backend.</li>
+    <li>
+      The backend performs real-time FX rate discovery, invokes NI APIs for AML checks,
+      and consults <strong>Fable</strong>, an external partner, for rail selection.
+    </li>
+    <li>
+      Fable routes the transaction to the most suitable rail network based on corridor
+      and exchange-rate optimization.
+    </li>
+    <li>The selected rail executes the transfer and delivers funds to the destination network.</li>
+  </ol>
+
+  <p>
+    This layered architecture ensures that merchants remain insulated from rail-specific
+    integrations, compliance workflows, and routing logic while interacting through a
+    stable and developer-friendly SDK.
+  </p>
+
+  <hr>
+
+  <h2 id="differentiators">4. Key Differentiators</h2>
+
+  <ul>
+    <li>
+      <strong>Real-Time FX Optimization:</strong> Dynamic exchange rate discovery ensures
+      transactions are routed through the most competitive rail for each corridor.
+    </li>
+    <li>
+      <strong>Multi-Rail Orchestration:</strong> Integration with multiple rail networks via
+      Fable eliminates dependency on a single provider.
+    </li>
+    <li>
+      <strong>Embedded Compliance Handling:</strong> AML checks are seamlessly performed via
+      NI APIs as part of the transaction flow.
+    </li>
+    <li>
+      <strong>Merchant-Centric Design:</strong> A single SDK integration replaces multiple
+      rail-specific implementations.
+    </li>
+    <li>
+      <strong>Clear Responsibility Boundaries:</strong> Routing and compliance are handled
+      by the platform, while execution remains with the selected rail.
+    </li>
+  </ul>
+
+  <hr>
+
+  <h2 id="strategy">5. Strategic Objective</h2>
+
+  <p>
+    The strategic objective of the Remittance SDK is to position MINT as a centralized
+    remittance orchestration platform that enables intelligent, compliant, and corridor-aware
+    money movement for B2B ecosystems.
+  </p>
+
+  <p>
+    By consolidating FX optimization, AML validation, and rail selection into a single platform
+    layer, the SDK allows merchants to scale across corridors rapidly without repeatedly
+    reengineering their remittance infrastructure.
+  </p>
+
+  <p>
+    In the long term, this approach enables MINT to continuously enhance routing intelligence
+    and compliance capabilities while providing merchant developers with a stable and future-ready
+    integration surface.
+  </p>
+
+    
+      </section>
+
+      <!-- ================= ARCHITECTURE ================= -->
+      <section id="architecture">
+        <h1>System Architecture</h1>
+
+         <p>
+    <strong>Remittance SDK architecture</strong> is based on a secure, efficient and robust design which can be integrated
+seamlessly by the issuer's. It enables reliable interaction between the issuer's app and the remittance ecosystem through which the issuer's merchants can effortlessly send remittance and receive real-time updates on their status.
+  </p>
+
+  <p>
+    The <strong>remittance ecosystem </strong> in our <strong>architecture</strong> includes parties like Issuer's app, Mint SDK, Mint Backend, Fable, Rail Network etc., which together provides a compliant and robust network for B2B remittance maintaining global standards. </p>
+
+<img src="fable_diagram.svg" alt="Remittance Flow Diagram"  style = "width: 100%; height: auto;"/>
+
+<hr>
+	<h2>1. Architectural Overview</h2>
+<p> The Mint Remittance Architecture can be broadly divided into the following domains: </p>
+	<h3>1.1 Issuer Domain</h3>
+<ul>
+<li> It consists of the issuer's native mobile application (Android/iOS) embedded with Mint SDK. </li>
+<li> Acts as the user's interface for remittance initiation. </li>
+<li> Establishes secure connection with Mint Backend using OAuth 2.0 protocol </li>
+</ul>
+	<h3>1.2 Mint Backend Domain</h3>
+<ul> 
+<li> It handles the communication with Mint SDK for user inputs for remittance. </li>
+<li> Communicates with NI WAY4 for verifying if merchant has sufficient balance for remittance. </li>
+<li> Communicates with NI's Ngenius payout system for AFT transactions. </li>
+<li> Communicates with Falcon for AML check </li>
+<li> It is also responsible for sending the transaction to Fable and providing transaction status to the end user </li>
+</ul>
+	<h3>1.3 NI Internal Domains </h3>
+<p> It consists of two parts: <p>
+<h4> a. WAY4 </h4>
+<ul>
+<li> It is the NI's card management system which securely handles card details and exposes secure APIs for getting card details </li>
+<li> Mint Backend domain calls WAY4 for merchant's card balance before initiating remittance </li>
+</ul>
+<h4> b. Ngenius </h4>
+<ul>
+<li> It is NI's internal payout system responsible for handling AFT transactions </li>
+<li> Mint Backend domain calls Ngenius APIs to pull funds from merchant's account to NI's pool account. </li>
+</ul>
+
+	<h3>1.4 AML Verification Domain </h3>
+<ul>
+<li> Falcon is an Anti-Money Laundering system which is responsible for monitoring transactions and preventing frauds </li>
+<li> Mint Backend domain calls Falcon API's for verification of the merchant's remittance details </li>
+</ul>
+	<h3>1.5 Remittance Network Domain </h3>
+<p> It consists of two parts:</p>
+<h4> a. Rails Network </h4>
+<ul> 
+<li> These are the rails like <strong> Mastercard, Visa, Thunes </strong> which are actually responsible for sending money across the countries </li>
+<li> They provides the FX rates, tax and charges for remittance </li>
+</ul>
+<h4> b. Receiver Partner </h4>
+<ul>
+<li> These are the banks or wallets or cash payout agencies which are responsible for sending money to the receiver </li>
+</ul>
+
+
+	<h3>1.6 Aggregator Domain </h3> 
+<ul>
+<li> Fable acts as the <strong>aggregator</strong> for all the rails. </li>
+<li> Fable provides the best exchange rate among the rails for every transaction. </li>
+</ul>
+
+ <hr>
+	<h2>2. End-to-End Remittance Flow </h2>
+<p> The following steps describes the interaction how the various domains interacts among themselves to perform a remittance transaction successfully.
+<ol> 
+<li> <strong>Initiation:</strong> The user initiates a remittance through the send remittance button in the issuer mobile app.
+ This routes the user to Mint SDK. During this launch the issuer app is verified using client Id and client secret. </li>  
+<li> <strong>User Input:</strong> During this step the user inputs the amount he/she wants to send.
+ Mint Backend then verifies if the user has sufficient balance for transaction using WAY4 APIs. </li>
+<li> <strong>AML verification:</strong> After user fills the transaction details, Mint Backend invokes Falcon APIs for AML verification. </li>
+<li> <strong>Debit merchant balance:</strong> Mint Backend invokes Ngenius domain for AFT transaction to pull funds from merchant's account to NI's pool account. </li>
+<li> <strong>Initiate remittance:</strong> After successful AML verification and AFT transaction Mint Backend initiates remittance through Fable. </li>
+<li> <strong>Sending money to receiver:</strong> Fable relays the remittance request to the best suitable rail through intelligent routing.
+ The rail network sends the money to the receiver partner of the corresponding receiver corridor. The receiver partner sends the money to the end receiver </li>
+<li> <strong>RFI Request:</strong> For some corridors, the receiver partners request extra documents for transaction validation which is known as Request For Information(RFI)
+In this scenario the merchant again needs to provide those documents in the defined timeline. </li>
+<li> <strong> Transaction History and Reporting:</strong> The Mint SDK invokes Fable API via Mint Backend to get the transaction details.
+ Mint Backend also maintains the AML verfication and successful AFT transaction status for reporting purposes </li>
+</ul>  
+  
+<hr>
+
+	<h2>3. Communication & Security Framework </h2>
+
+  <p> The entire remittance lifecycle from user landing into the Mint SDK to completing the transaction has been secured to ensure reliability and integrity. All the users landing into the Mint SDK needs to be authenticated by the issuer app. The issuer app can provide different access groups to user depending on their access to remittance functionalities. All the API invocations from Mint SDK to Mint Backend are secured using OAuth 2.0 protocol </p>
+
+<hr>
+
+	<h2>4. Architectural Advantage </h2>
+<table>
+  <thead>
+    <tr>
+      <th>Aspect</th>
+      <th>Advantage</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>Scalability</td>
+      <td>
+        The architecture is based on a distributed and cloud-native architecture that enables efficient scaling and load distribution.
+      </td>
+    </tr>
+    <tr>
+      <td>Resilience</td>
+      <td>
+        The architecture implements retry mechanisms and redundant data storage which helps resiliency even in case of network failures or system unavailabilities.
+      </td>
+    </tr>
+    <tr>
+      <td>Interoperability</td>
+      <td>
+        Works with various rail networks like Visa, Mastercard, Thunes which helps in availability even when one of them is unavailable.
+      </td>
+    </tr>
+    <tr>
+      <td>Data Security</td>
+      <td>
+        Enforced encryption, hashing, and token-based access control ensure full
+        data protection.
+      </td>
+    </tr>
+    <tr>
+      <td>Operational Insight</td>
+      <td>
+        Transaction logs, AML status and other related details are stored for tracking and analytics
+      </td>
+    </tr>
+    
+  </tbody>
+</table>
+
+<hr>
+
+	<h2>5. Architecture Summary </h2>
+<p> In essence, the Mint Remittance SDK architecture is designed to unify real-time decisioning, compliance orchestration, and network abstraction into a single, developer-centric integration layer. It enables merchant platforms to initiate outward remittances seamlessly, while Mint’s backend and partner ecosystem handle FX discovery, routing, and regulatory enforcement behind the scenes.</p>
+	
+      </section>
+
+      <!-- ================= FUNCTIONAL FLOWS ================= -->
+      <section id="ff-overview">
+        <h1>Functional Flows – Overview</h1>
+ <p>
+        <strong>Mint Remittance Services Functional Flows</strong> describe the end-to-end processes governing quotation discovery, balance validation, compliance screening, transaction initiation, and transaction lifecycle management for cross-border remittances.
+      </p>
+
+      <p>
+        These flows define how a merchant or issuer application integrated via the Mint SDK interacts with Mint Backend, compliance engines, FX partners, and payout networks to ensure secure, compliant, and real-time remittance execution.
+      </p>
+
+      <h3>Design Objectives</h3>
+      <ul>
+        <li>Prevent ineligible or non-funded transactions</li>
+        <li>Enforce AML and regulatory compliance via Falcons</li>
+        <li>Ensure deterministic, auditable, and traceable outcomes</li>
+      </ul>
+
+      <h3>Primary Operational Flows</h3>
+      <ul>
+        <li><strong>Remittance Transaction Validation Flow</strong></li>
+        <li><strong>Transaction Initiation and Funds Movement Flow</strong></li>
+        <li><strong>Transaction Monitoring and Lifecycle Management Flow</strong></li>
+      </ul>
+      </section>
+
+      <section id="validation-flow">
+        <h1>Remittance Transaction Validation Flow</h1>
+
+         <p>
+        This flow determines whether a remittance transaction is eligible to proceed. It ensures sufficient sender balance, AML clearance via Falcons, and corridor-level validations before allowing transaction initiation.
+      </p>
+
+      <h3>Flow Description</h3>
+      <ul>
+        <li>The sender initiates a remittance journey from the merchant application integrated with the Mint SDK.</li>
+        <li>The SDK establishes transaction context using the sender identifier.</li>
+        <li>Mint Backend retrieves sender profile and configuration data.</li>
+        <li>The SDK requests available destination countries and delivery modes.</li>
+        <li>Mint Backend applies corridor, partner, and regulatory constraints.</li>
+        <li>The sender enters either a source amount or destination amount:
+          <ul>
+            <li><strong>Source Amount</strong>
+              <ul>
+                <li>SDK performs a real-time balance check via the merchant system.</li>
+                <li>Insufficient balance results in immediate termination.</li>
+              </ul>
+            </li>
+            <li><strong>Destination Amount</strong>
+              <ul>
+                <li>Mint Backend retrieves FX quotation.</li>
+                <li>Calculated source amount is validated against sender balance.</li>
+                <li>Insufficient balance results in termination.</li>
+              </ul>
+            </li>
+          </ul>
+        </li>
+        <li>Mint Backend issues a time-bound FX lock token.</li>
+        <li>Sender confirms quotation.</li>
+        <li>Transaction metadata is submitted to Falcons for AML screening.</li>
+        <li>Approved transactions are cleared for initiation; rejected transactions are blocked.</li>
+      </ul>
+
+      <hr>
+      </section>
+
+      <section id="initiation-flow">
+	   <h1>Transaction Initiation and Funds Movement Flow</h1>
+       <p>
+        This flow governs transaction creation, sender fund debits, and submission to remittance partners for execution.
+      </p>
+
+      <h3>Flow Description</h3>
+      <ul>
+        <li>The merchant initiates transaction execution using the approved FX lock token.</li>
+        <li>Mint Backend creates a remittance transaction record with a unique transaction ID.</li>
+        <li>Sender funds are debited via the merchant or issuer system.</li>
+        <li>Funds debit confirmation is validated.</li>
+        <li>Mint submits the transaction to the remittance partner with payout instructions.</li>
+        <li>Transaction status transitions to <strong>PROCESSING</strong>.</li>
+      </ul>
+
+      <hr>
+      </section>
+
+      <section id="monitoring-flow">
+        <h1>Transaction Monitoring & Lifecycle</h1>
+
+         <p>
+        This flow manages post-initiation transaction states, partner callbacks, exception handling, and final settlement notifications.
+      </p>
+
+      <h3>Flow Description</h3>
+      <ul>
+        <li>Mint receives asynchronous status updates from remittance partners.</li>
+        <li>Transaction state transitions through lifecycle stages such as:
+          <ul>
+            <li>PROCESSING</li>
+            <li>COMPLETED</li>
+            <li>FAILED</li>
+            <li>REVERSED</li>
+          </ul>
+        </li>
+        <li>Exceptions or RFIs are surfaced to the merchant via webhooks.</li>
+        <li>Final transaction outcomes are recorded and reconciled.</li>
+        <li>Merchant systems receive terminal status notifications.</li>
+      </ul>
+      </section>
+
+    </div>
+  </main>
+
+  <!-- Right Sidebar - Table of Contents -->
+  <aside class="toc-sidebar">
+    <h3>On this page</h3>
+    <ul class="toc-list" id="toc-list"></ul>
+  </aside>
+</div>
+
+<script>
+  const links = document.querySelectorAll(".nav-link");
+  const sections = document.querySelectorAll("section");
+  const breadcrumb = document.getElementById("breadcrumb");
+  const tocList = document.getElementById("toc-list");
+  const contentContainer = document.querySelector(".content");
+
+  // Function to generate table of contents from active section
+  function generateTOC() {
+    const activeSection = document.querySelector("section.active");
+    if (!activeSection) return;
+
+    tocList.innerHTML = "";
+    const headings = activeSection.querySelectorAll("h1, h2, h3, h4");
+
+    headings.forEach((heading, index) => {
+      // Skip h1 as it's the main title
+      if (heading.tagName === "H1") return;
+
+      // Generate ID if not present
+      if (!heading.id) {
+        heading.id = `heading-${index}-${heading.textContent.toLowerCase().replace(/\s+/g, "-").replace(/[^a-z0-9-]/g, "")}`;
+      }
+
+      const level = parseInt(heading.tagName.charAt(1));
+      const li = document.createElement("li");
+      const a = document.createElement("a");
+      a.href = `#${heading.id}`;
+      a.textContent = heading.textContent.trim();
+      a.classList.add(`toc-level-${level}`);
+
+      // Add click handler for smooth scroll
+      a.addEventListener("click", (e) => {
+        e.preventDefault();
+        heading.scrollIntoView({ behavior: "smooth", block: "start" });
+        // Update active TOC item
+        document.querySelectorAll(".toc-list a").forEach(link => link.classList.remove("active"));
+        a.classList.add("active");
+      });
+
+      li.appendChild(a);
+      tocList.appendChild(li);
+    });
+  }
+
+  // Function to update active TOC item on scroll
+  function updateActiveTOC() {
+    const activeSection = document.querySelector("section.active");
+    if (!activeSection) return;
+
+    const headings = Array.from(activeSection.querySelectorAll("h2, h3, h4"));
+    const tocLinks = document.querySelectorAll(".toc-list a");
+
+    if (headings.length === 0 || tocLinks.length === 0) return;
+
+    let currentHeading = null;
+    const offset = 120; // Offset from top of viewport
+
+    // Find the heading that's currently in view
+    for (let i = 0; i < headings.length; i++) {
+      const heading = headings[i];
+      const rect = heading.getBoundingClientRect();
+      
+      // Check if heading is in viewport (with offset)
+      if (rect.top <= offset + 50 && rect.bottom >= offset) {
+        currentHeading = heading;
+        break;
+      }
+    }
+
+    // If no heading is in view, find the last heading that has been scrolled past
+    if (!currentHeading) {
+      for (let i = headings.length - 1; i >= 0; i--) {
+        const heading = headings[i];
+        const rect = heading.getBoundingClientRect();
+        
+        if (rect.top < offset + 100) {
+          currentHeading = heading;
+          break;
+        }
+      }
+    }
+
+    // If still no heading found and we're at the top, use the first one
+    if (!currentHeading && headings.length > 0) {
+      const firstHeading = headings[0];
+      const rect = firstHeading.getBoundingClientRect();
+      if (rect.top > offset + 200) {
+        // We're above the first heading, don't highlight anything
+        tocLinks.forEach((link) => link.classList.remove("active"));
+        return;
+      }
+      currentHeading = firstHeading;
+    }
+
+    // Update active state
+    tocLinks.forEach((link) => {
+      link.classList.remove("active");
+      if (currentHeading && link.getAttribute("href") === `#${currentHeading.id}`) {
+        link.classList.add("active");
+      }
+    });
+  }
+
+  // Initialize TOC on page load
+  generateTOC();
+
+  // Update TOC when section changes
+  links.forEach(link => {
+    link.addEventListener("click", () => {
+      links.forEach(l => l.classList.remove("active"));
+      sections.forEach(s => s.classList.remove("active"));
+
+      link.classList.add("active");
+      document.getElementById(link.dataset.target).classList.add("active");
+      breadcrumb.textContent = link.textContent;
+
+      // Regenerate TOC for new section
+      setTimeout(() => {
+        generateTOC();
+        // Reset scroll position for new section
+        if (contentContainer) {
+          contentContainer.scrollTop = 0;
+        }
+        setTimeout(updateActiveTOC, 200);
+      }, 100);
+    });
+  });
+
+  // Update active TOC item on scroll - listen to content container scroll
+  if (contentContainer) {
+    contentContainer.addEventListener("scroll", updateActiveTOC, { passive: true });
+    // Also update on initial load
+    setTimeout(updateActiveTOC, 100);
+  }
+  
+  // Also listen to window scroll as fallback
+  window.addEventListener("scroll", updateActiveTOC, { passive: true });
+
+  // Smooth scroll behavior for anchor links
+  document.querySelectorAll("a[href^='#']").forEach(anchor => {
+    anchor.addEventListener("click", function (e) {
+      const href = this.getAttribute("href");
+      if (href && href !== "#") {
+        const target = document.querySelector(href);
+        if (target) {
+          e.preventDefault();
+          target.scrollIntoView({ behavior: "smooth", block: "start" });
+        }
+      }
+    });
+  });
+</script>
+
+</body>
+</html>
