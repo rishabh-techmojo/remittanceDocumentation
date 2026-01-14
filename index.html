@@ -52,6 +52,55 @@
       letter-spacing: 0.4px;
     }
 
+    .sidebar-section {
+      margin-bottom: 8px;
+    }
+
+    .sidebar-section-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 8px 10px;
+      font-size: 13px;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.4px;
+      cursor: pointer;
+      user-select: none;
+      border-radius: 6px;
+      transition: background-color 0.2s;
+    }
+
+    .sidebar-section-header:hover {
+      background: #f1f5f9;
+    }
+
+    .sidebar-section-header .expand-icon {
+      width: 16px;
+      height: 16px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: transform 0.2s;
+      font-size: 30px;
+      color: var(--text-muted);
+    }
+
+    .sidebar-section-header.expanded .expand-icon {
+      transform: rotate(90deg);
+    }
+
+    .sidebar-section-content {
+      max-height: 0;
+      overflow: hidden;
+      transition: max-height 0.3s ease-out;
+    }
+
+    .sidebar-section-content.expanded {
+      max-height: 1000px;
+      transition: max-height 0.3s ease-in;
+    }
+
     .sidebar a {
       display: block;
       padding: 8px 10px;
@@ -60,6 +109,7 @@
       text-decoration: none;
       border-radius: 6px;
       cursor: pointer;
+      margin-left: 0;
     }
 
     .sidebar a.active,
@@ -240,17 +290,38 @@
   <aside class="sidebar">
     <strong>Network › Mint</strong>
 
-    <h3>Overview</h3>
-    <a class="nav-link active" data-target="overview">Overview</a>
+    <div class="sidebar-section">
+      <div class="sidebar-section-header" data-section="overview-section">
+        <span>Overview</span>
+        <span class="expand-icon">›</span>
+      </div>
+      <div class="sidebar-section-content" id="overview-section">
+        <a class="nav-link active" data-target="overview">Overview</a>
+      </div>
+    </div>
 
-    <h3>System Architecture</h3>
-    <a class="nav-link" data-target="architecture">System Architecture</a>
+    <div class="sidebar-section">
+      <div class="sidebar-section-header" data-section="architecture-section">
+        <span>System Architecture</span>
+        <span class="expand-icon">›</span>
+      </div>
+      <div class="sidebar-section-content" id="architecture-section">
+        <a class="nav-link" data-target="architecture">System Architecture</a>
+      </div>
+    </div>
 
-    <h3>Functional Flows</h3>
-    <a class="nav-link" data-target="ff-overview">Overview</a>
-    <a class="nav-link" data-target="validation-flow">Transaction Validation</a>
-    <a class="nav-link" data-target="initiation-flow">Initiation & Funds Movement</a>
-    <a class="nav-link" data-target="monitoring-flow">Monitoring & Lifecycle</a>
+    <div class="sidebar-section">
+      <div class="sidebar-section-header" data-section="functional-flows-section">
+        <span>Functional Flows</span>
+        <span class="expand-icon">›</span>
+      </div>
+      <div class="sidebar-section-content" id="functional-flows-section">
+        <a class="nav-link" data-target="ff-overview">Overview</a>
+        <a class="nav-link" data-target="validation-flow">Transaction Validation</a>
+        <a class="nav-link" data-target="initiation-flow">Initiation & Funds Movement</a>
+        <a class="nav-link" data-target="monitoring-flow">Monitoring & Lifecycle</a>
+      </div>
+    </div>
   </aside>
 
   <!-- Main Content -->
@@ -781,6 +852,46 @@ In this scenario the merchant again needs to provide those documents in the defi
   // Initialize TOC on page load
   generateTOC();
 
+  // Handle sidebar section expand/collapse
+  const sectionHeaders = document.querySelectorAll(".sidebar-section-header");
+  sectionHeaders.forEach(header => {
+    header.addEventListener("click", () => {
+      const sectionId = header.getAttribute("data-section");
+      const content = document.getElementById(sectionId);
+      
+      if (content) {
+        const isExpanded = content.classList.contains("expanded");
+        
+        if (isExpanded) {
+          content.classList.remove("expanded");
+          header.classList.remove("expanded");
+        } else {
+          content.classList.add("expanded");
+          header.classList.add("expanded");
+        }
+      }
+    });
+  });
+
+  // Expand section if it contains the active link
+  function expandActiveSection() {
+    const activeLink = document.querySelector(".sidebar a.active");
+    if (activeLink) {
+      const sectionContent = activeLink.closest(".sidebar-section-content");
+      if (sectionContent) {
+        const sectionId = sectionContent.id;
+        const header = document.querySelector(`[data-section="${sectionId}"]`);
+        if (header && !sectionContent.classList.contains("expanded")) {
+          sectionContent.classList.add("expanded");
+          header.classList.add("expanded");
+        }
+      }
+    }
+  }
+
+  // Expand active section on load
+  setTimeout(expandActiveSection, 100);
+
   // Update TOC when section changes
   links.forEach(link => {
     link.addEventListener("click", () => {
@@ -790,6 +901,9 @@ In this scenario the merchant again needs to provide those documents in the defi
       link.classList.add("active");
       document.getElementById(link.dataset.target).classList.add("active");
       breadcrumb.textContent = link.textContent;
+
+      // Expand section containing the active link
+      expandActiveSection();
 
       // Regenerate TOC for new section
       setTimeout(() => {
