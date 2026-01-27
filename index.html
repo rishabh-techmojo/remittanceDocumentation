@@ -269,6 +269,72 @@
       margin: 32px 0;
     }
 
+    .sidebar-section-content.nested {
+  padding-left: 12px;
+}
+
+.sidebar-subsection-header {
+  font-weight: 600;
+  margin-top: 8px;
+  cursor: pointer;
+}
+
+.sidebar-subsection-content {
+  padding-left: 16px;
+}
+
+.nav-link {
+  display: block;
+  padding: 4px 0;
+}
+.raci-table {
+  width: 100%;
+  border-collapse: collapse;
+  background: #ffffff;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+}
+
+.raci-table th,
+.raci-table td {
+  border: 1px solid #e5e7eb;
+  padding: 12px;
+  text-align: center;
+  font-size: 14px;
+}
+
+.raci-table th {
+  background: #111827;
+  color: #ffffff;
+  font-weight: 600;
+}
+
+.raci-table th span {
+  font-weight: normal;
+  font-size: 12px;
+  opacity: 0.8;
+}
+
+.raci-table td:first-child {
+  text-align: left;
+  font-weight: 500;
+}
+
+/* RACI color coding */
+.r {
+  background-color: #d1fae5; /* green */
+  font-weight: bold;
+}
+
+.a {
+  background-color: #fee2e2; /* red */
+  font-weight: bold;
+}
+
+.i {
+  background-color: #e5e7eb; /* gray */
+  color: #374151;
+}
+
     @media (max-width: 1200px) {
       .toc-sidebar {
         display: none;
@@ -286,45 +352,68 @@
 <body>
 <div class="layout">
 
-  <!-- Sidebar -->
-  <aside class="sidebar">
-    <strong>Network › Mint</strong>
+    <aside class="sidebar">
+        <strong>Network › Mint</strong>
 
-    <div class="sidebar-section">
-      <div class="sidebar-section-header" data-section="overview-section">
-        <span>Overview</span>
-        <span class="expand-icon">›</span>
-      </div>
-      <div class="sidebar-section-content" id="overview-section">
-        <a class="nav-link active" data-target="overview">Overview</a>
-      </div>
-    </div>
+        <!-- Overview -->
+        <div class="sidebar-section">
+            <div class="sidebar-section-header" data-section="overview-section">
+                <span>Overview</span>
+                <span class="expand-icon">›</span>
+            </div>
+            <div class="sidebar-section-content" id="overview-section">
+                <a class="nav-link active" data-target="overview">Overview</a>
+            </div>
+        </div>
+        <div class="sidebar-section">
+            <div class="sidebar-section-header" data-section="pre-requisites-section">
+                <span>Prereuisites</span>
+                <span class="expand-icon">›</span>
+            </div>
+            <div class="sidebar-section-content" id="pre-requisites-section">
+                <a class="nav-link active" data-target="pre-requisites">Pre Requisites</a>
+            </div>
+        </div>
+        <!-- B2B Remittance -->
+        <div class="sidebar-section">
+            <div class="sidebar-section-header" data-section="b2b-remittance-section">
+                <span>NI Merchant App B2B Remittance</span>
+                <span class="expand-icon">›</span>
+            </div>
 
-    <div class="sidebar-section">
-      <div class="sidebar-section-header" data-section="architecture-section">
-        <span>System Architecture</span>
-        <span class="expand-icon">›</span>
-      </div>
-      <div class="sidebar-section-content" id="architecture-section">
-        <a class="nav-link" data-target="architecture">System Architecture</a>
-      </div>
-    </div>
+            <div class="sidebar-section-content nested" id="b2b-remittance-section">
 
-    <div class="sidebar-section">
-      <div class="sidebar-section-header" data-section="functional-flows-section">
-        <span>Functional Flows</span>
-        <span class="expand-icon">›</span>
-      </div>
-      <div class="sidebar-section-content" id="functional-flows-section">
-        <a class="nav-link" data-target="ff-overview">Overview</a>
-        <a class="nav-link" data-target="validation-flow">Transaction Validation</a>
-        <a class="nav-link" data-target="initiation-flow">Initiation & Funds Movement</a>
-        <a class="nav-link" data-target="monitoring-flow">Monitoring & Lifecycle</a>
-      </div>
-    </div>
-  </aside>
+                <!-- System Architecture -->
+                <div class="sidebar-subsection">
+                    <div class="sidebar-subsection-header" data-section="architecture-section">
+                        <a class="nav-link" data-target="architecture"><span>System Architecture</span></a>
 
-  <!-- Main Content -->
+                    </div>
+
+                </div>
+
+                <!-- Functional Flows -->
+                <div class="sidebar-subsection">
+                    <div class="sidebar-subsection-header" data-section="functional-flows-section">
+                        <span>Functional Flows</span>
+                        <span class="expand-icon">›</span>
+                    </div>
+                    <div class="sidebar-subsection-content" id="functional-flows-section">
+                        <a class="nav-link" data-target="ff-overview">Overview</a>
+                        <a class="nav-link" data-target="validation-flow">Transaction Validation</a>
+                        <a class="nav-link" data-target="monitoring-flow">Monitoring & Lifecycle</a>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </aside>
+
+
+
+
+
+    <!-- Main Content -->
   <main class="content">
     <div class="content-inner">
 
@@ -476,9 +565,73 @@
     and compliance capabilities while providing merchant developers with a stable and future-ready
     integration surface.
   </p>
-
-    
       </section>
+<section id="pre-requisites">
+    <h2>Pre Requisites</h2>
+
+    <table class="raci-table">
+        <thead>
+        <tr>
+            <th>Activity</th>
+            <th>Merchant App</th>
+            <th>Mint SDK</th>
+            <th>Fable</th>
+
+        </tr>
+        </thead>
+        <tbody>
+        <tr>
+            <td>Debit money from merchant’s prepaid account</td>
+            <td class="r">R</td>
+            <td class="i">I</td>
+            <td class="i">I</td>
+
+        </tr>
+
+        <tr>
+            <td>Integration of SDK to the merchant app</td>
+            <td class="r">R</td>
+            <td class="i">I</td>
+            <td class="i">I</td>
+
+        </tr>
+
+        <tr>
+            <td>AML check & transaction screening</td>
+            <td class="i">I</td>
+            <td class="r">R</td>
+            <td class="i">I</td>
+
+        </tr>
+
+        <tr>
+            <td>Feeding sender’s contact information</td>
+            <td class="r">R</td>
+            <td class="a">A</td>
+            <td class="i">I</td>
+
+        </tr>
+
+        <tr>
+            <td>Providing quotation (FX / fees / charges)</td>
+            <td class="i">I</td>
+            <td class="i">I</td>
+            <td class="r">R</td>
+
+        </tr>
+
+        <tr>
+            <td>Intelligent routing to best available rail network (Visa, MasterCard, Thunes etc.)</td>
+            <td class="i">I</td>
+            <td class="i">I</td>
+            <td class="r">R</td>
+
+        </tr>
+        </tbody>
+    </table>
+</section>
+    
+
 
       <!-- ================= ARCHITECTURE ================= -->
       <section id="architecture">
@@ -486,48 +639,46 @@
 
          <p>
     <strong>Remittance SDK architecture</strong> is based on a secure, efficient and robust design which can be integrated
-seamlessly by the issuer's. It enables reliable interaction between the issuer's app and the remittance ecosystem through which the issuer's merchants can effortlessly send remittance and receive real-time updates on their status.
+seamlessly by the merchant app. It enables reliable interaction between the merchant app and the remittance ecosystem through which the issuer's merchants can effortlessly send remittance and receive real-time updates on their status.
   </p>
 
   <p>
-    The <strong>remittance ecosystem </strong> in our <strong>architecture</strong> includes parties like Issuer's app, Mint SDK, Mint Backend, Fable, Rail Network etc., which together provides a compliant and robust network for B2B remittance maintaining global standards. </p>
+    The <strong>remittance ecosystem </strong> in our <strong>architecture</strong> includes parties like Merchant app, Mint SDK, Mint Backend, Fable, Rail Network etc., which together provides a compliant and robust network for B2B remittance maintaining global standards. </p>
 
-<img src="fable_diagram.svg" alt="Remittance Flow Diagram"  style = "width: 100%; height: auto;"/>
+<img src="fable_updated_architecture.svg" alt="Remittance Flow Diagram"  style = "width: 100%; height: auto;"/>
 
 <hr>
 	<h2>1. Architectural Overview</h2>
 <p> The Mint Remittance Architecture can be broadly divided into the following domains: </p>
 	<h3>1.1 Issuer Domain</h3>
 <ul>
-<li> It consists of the issuer's native mobile application (Android/iOS) embedded with Mint SDK. </li>
+<li> It consists of the merchant's native mobile application (Android/iOS) embedded with Mint SDK. </li>
 <li> Acts as the user's interface for remittance initiation. </li>
 <li> Establishes secure connection with Mint Backend using OAuth 2.0 protocol </li>
 </ul>
 	<h3>1.2 Mint Backend Domain</h3>
 <ul> 
 <li> It handles the communication with Mint SDK for user inputs for remittance. </li>
-<li> Communicates with NI WAY4 for verifying if merchant has sufficient balance for remittance. </li>
-<li> Communicates with NI's Ngenius payout system for AFT transactions. </li>
-<li> Communicates with Falcon for AML check </li>
+<li> Communicates with NI ecosystem for verifying if merchant has sufficient balance for remittance. </li>
+<li> Communicates with FICO Falcon for transaction screening </li>
+<li>Communicates with Azentio AMLOCK for AML check</li>
 <li> It is also responsible for sending the transaction to Fable and providing transaction status to the end user </li>
 </ul>
-	<h3>1.3 NI Internal Domains </h3>
-<p> It consists of two parts: <p>
-<h4> a. WAY4 </h4>
-<ul>
-<li> It is the NI's card management system which securely handles card details and exposes secure APIs for getting card details </li>
-<li> Mint Backend domain calls WAY4 for merchant's card balance before initiating remittance </li>
-</ul>
-<h4> b. Ngenius </h4>
-<ul>
-<li> It is NI's internal payout system responsible for handling AFT transactions </li>
-<li> Mint Backend domain calls Ngenius APIs to pull funds from merchant's account to NI's pool account. </li>
-</ul>
+	<h3>1.3 NI Ecosystem</h3>
+    <ul>
+        <li>
+            It provides an endpoint to verify if the merchant has sufficient balance for remittance
+        </li>
+        <li>
+            It takes care of fund movement from merchant to Rails for the remittance
+        </li>
+    </ul>
 
-	<h3>1.4 AML Verification Domain </h3>
+	<h3>1.4 AML Verification and Transaction Screening Domain </h3>
 <ul>
-<li> Falcon is an Anti-Money Laundering system which is responsible for monitoring transactions and preventing frauds </li>
-<li> Mint Backend domain calls Falcon API's for verification of the merchant's remittance details </li>
+<li> AMLOCK  is an Anti-Money Laundering system which is responsible for monitoring transactions and preventing frauds </li>
+    <li> FICO Falcon is a transaction screening system which is used to detect and prevent transactional fraud </li>
+<li> Mint Backend domain calls Falcon and AMLOCK API's for verification of the merchant's remittance transaction </li>
 </ul>
 	<h3>1.5 Remittance Network Domain </h3>
 <p> It consists of two parts:</p>
@@ -554,18 +705,18 @@ seamlessly by the issuer's. It enables reliable interaction between the issuer's
 <ol> 
 <li> <strong>Initiation:</strong> The user initiates a remittance through the send remittance button in the issuer mobile app.
  This routes the user to Mint SDK. During this launch the issuer app is verified using client Id and client secret. </li>  
-<li> <strong>User Input:</strong> During this step the user inputs the amount he/she wants to send.
- Mint Backend then verifies if the user has sufficient balance for transaction using WAY4 APIs. </li>
-<li> <strong>AML verification:</strong> After user fills the transaction details, Mint Backend invokes Falcon APIs for AML verification. </li>
-<li> <strong>Debit merchant balance:</strong> Mint Backend invokes Ngenius domain for AFT transaction to pull funds from merchant's account to NI's pool account. </li>
-<li> <strong>Initiate remittance:</strong> After successful AML verification and AFT transaction Mint Backend initiates remittance through Fable. </li>
+<li> <strong>User Input:</strong> During this step the user inputs the amount he/she wants to send.</li>
+<li> <strong>AML verification:</strong> After user fills the transaction details, Mint Backend invokes AMLOCK APIs for AML verification. </li>
+          <li><strong>Transaction Screening:</strong> Mint Backend parallely calls Falcon APIs for fraud detection. </li>
+<li> <strong>Balance verification: </strong> Mint Backend invokes NI ecosystem to verify if merchant has sufficient balance for remittance </li>
+<li> <strong>Initiate remittance:</strong> After successful AML verification and transaction screening Mint Backend initiates remittance through Fable. </li>
 <li> <strong>Sending money to receiver:</strong> Fable relays the remittance request to the best suitable rail through intelligent routing.
  The rail network sends the money to the receiver partner of the corresponding receiver corridor. The receiver partner sends the money to the end receiver </li>
 <li> <strong>RFI Request:</strong> For some corridors, the receiver partners request extra documents for transaction validation which is known as Request For Information(RFI)
 In this scenario the merchant again needs to provide those documents in the defined timeline. </li>
 <li> <strong> Transaction History and Reporting:</strong> The Mint SDK invokes Fable API via Mint Backend to get the transaction details.
  Mint Backend also maintains the AML verfication and successful AFT transaction status for reporting purposes </li>
-</ul>  
+</ol>
   
 <hr>
 
@@ -647,7 +798,6 @@ In this scenario the merchant again needs to provide those documents in the defi
       <h3>Primary Operational Flows</h3>
       <ul>
         <li><strong>Remittance Transaction Validation Flow</strong></li>
-        <li><strong>Transaction Initiation and Funds Movement Flow</strong></li>
         <li><strong>Transaction Monitoring and Lifecycle Management Flow</strong></li>
       </ul>
       </section>
@@ -656,61 +806,30 @@ In this scenario the merchant again needs to provide those documents in the defi
         <h1>Remittance Transaction Validation Flow</h1>
 
          <p>
-        This flow determines whether a remittance transaction is eligible to proceed. It ensures sufficient sender balance, AML clearance via Falcons, and corridor-level validations before allowing transaction initiation.
+        This flow determines whether a remittance transaction is eligible to proceed. It ensures sufficient sender balance, AML clearance via AMLOCK, Transaction screening via FALCON, and corridor-level validations before allowing transaction initiation.
       </p>
-          <img src="validation_flow.svg" alt="Remittance Flow Diagram"  style = "width: 100%; height: auto;"/>
+          <img src="transaction_validation_flow.svg" alt="Remittance Flow Diagram"  style = "width: 100%; height: auto;"/>
       <h3>Flow Description</h3>
       <ul>
         <li>The sender initiates a remittance journey from the merchant application integrated with the Mint SDK.</li>
-        <li>The SDK establishes transaction context using the sender identifier.</li>
-        <li>Mint Backend retrieves sender profile and configuration data.</li>
+          <li>During initiation of SDK sender's contact information like name, address, email, mobile number etc are provided by the merchant app.</li>
+
         <li>The SDK requests available destination countries and delivery modes.</li>
         <li>Mint Backend applies corridor, partner, and regulatory constraints.</li>
-        <li>The sender enters either a source amount or destination amount:
-          <ul>
-            <li><strong>Source Amount</strong>
-              <ul>
-                <li>SDK performs a real-time balance check via the merchant system.</li>
-                <li>Insufficient balance results in immediate termination.</li>
-              </ul>
-            </li>
-            <li><strong>Destination Amount</strong>
-              <ul>
-                <li>Mint Backend retrieves FX quotation.</li>
-                <li>Calculated source amount is validated against sender balance.</li>
-                <li>Insufficient balance results in termination.</li>
-              </ul>
-            </li>
-          </ul>
-        </li>
-        <li>Mint Backend issues a time-bound FX lock token.</li>
+        <li>The sender enters either a source amount or destination amount</li>
+          <li>Mint Backend invokes Fable API to fetch quotation based on the entered source or destination amount and destination country</li>
+        <li>Fable issues a time-bound FX lock token.</li>
         <li>Sender confirms quotation.</li>
-        <li>Transaction metadata is submitted to Falcons for AML screening.</li>
-        <li>Approved transactions are cleared for initiation; rejected transactions are blocked.</li>
+        <li>Transaction metadata is submitted to AMLOCK for AML screening.</li>
+          <li>Transaction metadata is also sent to Falcon for transaction screening.</li>
+          <li>Mint Backend invokes APIs exposed by NI ecosystem for verification of merchant's balance for remittance.</li>
+        <li>Approved transactions are cleared for initiation using the FX token; rejected transactions are blocked.</li>
+          <li>Transaction status transitions to <strong>PROCESSING</strong>.</li>
       </ul>
 
       <hr>
       </section>
 
-      <section id="initiation-flow">
-	   <h1>Transaction Initiation and Funds Movement Flow</h1>
-       <p>
-        This flow governs transaction creation, sender fund debits, and submission to remittance partners for execution.
-      </p>
-          <img src="funds_movement_flow.svg" alt="Remittance Flow Diagram"  style = "width: 100%; height: auto;"/>
-
-      <h3>Flow Description</h3>
-      <ul>
-        <li>The merchant initiates transaction execution using the approved FX lock token.</li>
-        <li>Mint Backend creates a remittance transaction record with a unique transaction ID.</li>
-        <li>Sender funds are debited via the merchant or issuer system.</li>
-        <li>Funds debit confirmation is validated.</li>
-        <li>Mint submits the transaction to the remittance partner with payout instructions.</li>
-        <li>Transaction status transitions to <strong>PROCESSING</strong>.</li>
-      </ul>
-
-      <hr>
-      </section>
 
       <section id="monitoring-flow">
         <h1>Transaction Monitoring & Lifecycle</h1>
@@ -753,6 +872,19 @@ In this scenario the merchant again needs to provide those documents in the defi
   const breadcrumb = document.getElementById("breadcrumb");
   const tocList = document.getElementById("toc-list");
   const contentContainer = document.querySelector(".content");
+  document.querySelectorAll('.sidebar-section-header').forEach(header => {
+  header.addEventListener('click', () => {
+    const sectionId = header.dataset.section;
+    const content = document.getElementById(sectionId);
+    const icon = header.querySelector('.expand-icon');
+
+    if (!content) return;
+
+    content.classList.toggle('open');
+    icon.classList.toggle('rotate');
+  });
+});
+
 
   // Function to generate table of contents from active section
   function generateTOC() {
@@ -899,7 +1031,7 @@ In this scenario the merchant again needs to provide those documents in the defi
     link.addEventListener("click", () => {
       links.forEach(l => l.classList.remove("active"));
       sections.forEach(s => s.classList.remove("active"));
-
+      // subSections.forRach( s=> s.classList.remove("active");
       link.classList.add("active");
       document.getElementById(link.dataset.target).classList.add("active");
       breadcrumb.textContent = link.textContent;
