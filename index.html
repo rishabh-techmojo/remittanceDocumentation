@@ -277,10 +277,43 @@
   font-weight: 600;
   margin-top: 8px;
   cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 8px 10px;
+  border-radius: 6px;
+  transition: background-color 0.2s;
+}
+
+.sidebar-subsection-header:hover {
+  background: #f1f5f9;
 }
 
 .sidebar-subsection-content {
   padding-left: 16px;
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height 0.3s ease-out;
+}
+
+.sidebar-subsection-content.expanded {
+  max-height: 1000px;
+  transition: max-height 0.3s ease-in;
+}
+
+.sidebar-subsection-header .expand-icon {
+  width: 16px;
+  height: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: transform 0.2s;
+  font-size: 30px;
+  color: var(--text-muted);
+}
+
+.sidebar-subsection-header.expanded .expand-icon {
+  transform: rotate(90deg);
 }
 
 .nav-link {
@@ -357,21 +390,15 @@
 
         <!-- Overview -->
         <div class="sidebar-section">
-            <div class="sidebar-section-header" data-section="overview-section">
-                <span>Overview</span>
-                <span class="expand-icon">›</span>
-            </div>
-            <div class="sidebar-section-content" id="overview-section">
-                <a class="nav-link active" data-target="overview">Overview</a>
-            </div>
+            <a class="nav-link active" data-target="overview">Overview</a>
         </div>
         <div class="sidebar-section">
             <div class="sidebar-section-header" data-section="pre-requisites-section">
-                <span>Prereuisites</span>
+                <span>Prerequisites</span>
                 <span class="expand-icon">›</span>
             </div>
             <div class="sidebar-section-content" id="pre-requisites-section">
-                <a class="nav-link active" data-target="pre-requisites">Pre Requisites</a>
+                <a class="nav-link active" data-target="pre-requisites">Prerequisites</a>
             </div>
         </div>
         <!-- B2B Remittance -->
@@ -567,7 +594,7 @@
   </p>
       </section>
 <section id="pre-requisites">
-    <h2>Pre Requisites</h2>
+    <h2>Prerequisites</h2>
 
     <table class="raci-table">
         <thead>
@@ -707,7 +734,7 @@ seamlessly by the merchant app. It enables reliable interaction between the merc
  This routes the user to Mint SDK. During this launch the issuer app is verified using client Id and client secret. </li>  
 <li> <strong>User Input:</strong> During this step the user inputs the amount he/she wants to send.</li>
 <li> <strong>AML verification:</strong> After user fills the transaction details, Mint Backend invokes AMLOCK APIs for AML verification. </li>
-          <li><strong>Transaction Screening:</strong> Mint Backend parallely calls Falcon APIs for fraud detection. </li>
+          <li><strong>Transaction Screening:</strong> Mint Backend calls Falcon APIs in parallel for fraud detection. </li>
 <li> <strong>Balance verification: </strong> Mint Backend invokes NI ecosystem to verify if merchant has sufficient balance for remittance </li>
 <li> <strong>Initiate remittance:</strong> After successful AML verification and transaction screening Mint Backend initiates remittance through Fable. </li>
 <li> <strong>Sending money to receiver:</strong> Fable relays the remittance request to the best suitable rail through intelligent routing.
@@ -715,7 +742,7 @@ seamlessly by the merchant app. It enables reliable interaction between the merc
 <li> <strong>RFI Request:</strong> For some corridors, the receiver partners request extra documents for transaction validation which is known as Request For Information(RFI)
 In this scenario the merchant again needs to provide those documents in the defined timeline. </li>
 <li> <strong> Transaction History and Reporting:</strong> The Mint SDK invokes Fable API via Mint Backend to get the transaction details.
- Mint Backend also maintains the AML verfication and successful AFT transaction status for reporting purposes </li>
+    Mint Backend also maintains the AML verification and successful AFT transaction status for reporting purposes </li>
 </ol>
   
 <hr>
@@ -872,18 +899,50 @@ In this scenario the merchant again needs to provide those documents in the defi
   const breadcrumb = document.getElementById("breadcrumb");
   const tocList = document.getElementById("toc-list");
   const contentContainer = document.querySelector(".content");
-  document.querySelectorAll('.sidebar-section-header').forEach(header => {
-  header.addEventListener('click', () => {
-    const sectionId = header.dataset.section;
-    const content = document.getElementById(sectionId);
-    const icon = header.querySelector('.expand-icon');
+  // Handle subsection headers (nested sections like "Functional Flows")
+  document.querySelectorAll('.sidebar-subsection-header').forEach(header => {
+    header.addEventListener('click', (e) => {
+      // Don't trigger if clicking on a nav-link inside
+      if (e.target.closest('.nav-link')) return;
+      
+      const sectionId = header.dataset.section;
+      const content = document.getElementById(sectionId);
+      const icon = header.querySelector('.expand-icon');
 
-    if (!content) return;
+      if (!content || !icon) return;
 
-    content.classList.toggle('open');
-    icon.classList.toggle('rotate');
+      // Collapse other subsections at the same level (accordion behavior)
+      const parentSection = header.closest('.sidebar-section-content');
+      if (parentSection) {
+        parentSection.querySelectorAll('.sidebar-subsection-content').forEach(otherContent => {
+          if (otherContent !== content) {
+            otherContent.classList.remove('expanded');
+          }
+        });
+        parentSection.querySelectorAll('.sidebar-subsection-header').forEach(otherHeader => {
+          if (otherHeader !== header) {
+            otherHeader.classList.remove('expanded');
+            const otherIcon = otherHeader.querySelector('.expand-icon');
+            if (otherIcon) {
+              otherIcon.classList.remove('rotate');
+            }
+          }
+        });
+      }
+
+      // Toggle the clicked subsection
+      const isExpanded = content.classList.contains('expanded');
+      if (isExpanded) {
+        content.classList.remove('expanded');
+        header.classList.remove('expanded');
+        icon.classList.remove('rotate');
+      } else {
+        content.classList.add('expanded');
+        header.classList.add('expanded');
+        icon.classList.add('rotate');
+      }
+    });
   });
-});
 
 
   // Function to generate table of contents from active section
@@ -986,7 +1045,7 @@ In this scenario the merchant again needs to provide those documents in the defi
   // Initialize TOC on page load
   generateTOC();
 
-  // Handle sidebar section expand/collapse
+  // Handle sidebar section expand/collapse with accordion behavior
   const sectionHeaders = document.querySelectorAll(".sidebar-section-header");
   sectionHeaders.forEach(header => {
     header.addEventListener("click", () => {
@@ -996,6 +1055,19 @@ In this scenario the merchant again needs to provide those documents in the defi
       if (content) {
         const isExpanded = content.classList.contains("expanded");
         
+        // Collapse all other sections first (accordion behavior)
+        document.querySelectorAll(".sidebar-section-content").forEach(otherContent => {
+          if (otherContent !== content) {
+            otherContent.classList.remove("expanded");
+          }
+        });
+        document.querySelectorAll(".sidebar-section-header").forEach(otherHeader => {
+          if (otherHeader !== header) {
+            otherHeader.classList.remove("expanded");
+          }
+        });
+        
+        // Toggle the clicked section
         if (isExpanded) {
           content.classList.remove("expanded");
           header.classList.remove("expanded");
@@ -1007,7 +1079,7 @@ In this scenario the merchant again needs to provide those documents in the defi
     });
   });
 
-  // Expand section if it contains the active link
+  // Expand section if it contains the active link (with accordion behavior)
   function expandActiveSection() {
     const activeLink = document.querySelector(".sidebar a.active");
     if (activeLink) {
@@ -1015,9 +1087,61 @@ In this scenario the merchant again needs to provide those documents in the defi
       if (sectionContent) {
         const sectionId = sectionContent.id;
         const header = document.querySelector(`[data-section="${sectionId}"]`);
-        if (header && !sectionContent.classList.contains("expanded")) {
-          sectionContent.classList.add("expanded");
-          header.classList.add("expanded");
+        if (header) {
+          // Collapse all other main sections first
+          document.querySelectorAll(".sidebar-section-content").forEach(otherContent => {
+            if (otherContent !== sectionContent) {
+              otherContent.classList.remove("expanded");
+            }
+          });
+          document.querySelectorAll(".sidebar-section-header").forEach(otherHeader => {
+            if (otherHeader !== header) {
+              otherHeader.classList.remove("expanded");
+            }
+          });
+          
+          // Expand the active section
+          if (!sectionContent.classList.contains("expanded")) {
+            sectionContent.classList.add("expanded");
+            header.classList.add("expanded");
+          }
+        }
+      }
+      
+      // Also handle subsections - expand the subsection containing the active link
+      const subsectionContent = activeLink.closest(".sidebar-subsection-content");
+      if (subsectionContent) {
+        const subsectionId = subsectionContent.id;
+        const subsectionHeader = document.querySelector(`.sidebar-subsection-header[data-section="${subsectionId}"]`);
+        if (subsectionHeader) {
+          // Collapse other subsections at the same level
+          const parentSection = subsectionContent.closest(".sidebar-section-content");
+          if (parentSection) {
+            parentSection.querySelectorAll(".sidebar-subsection-content").forEach(otherContent => {
+              if (otherContent !== subsectionContent) {
+                otherContent.classList.remove("expanded");
+              }
+            });
+            parentSection.querySelectorAll(".sidebar-subsection-header").forEach(otherHeader => {
+              if (otherHeader !== subsectionHeader) {
+                otherHeader.classList.remove("expanded");
+                const otherIcon = otherHeader.querySelector(".expand-icon");
+                if (otherIcon) {
+                  otherIcon.classList.remove("rotate");
+                }
+              }
+            });
+          }
+          
+          // Expand the active subsection
+          if (!subsectionContent.classList.contains("expanded")) {
+            subsectionContent.classList.add("expanded");
+            subsectionHeader.classList.add("expanded");
+            const icon = subsectionHeader.querySelector(".expand-icon");
+            if (icon) {
+              icon.classList.add("rotate");
+            }
+          }
         }
       }
     }
