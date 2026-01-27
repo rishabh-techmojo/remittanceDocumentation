@@ -528,7 +528,7 @@
     <li>The merchant application invokes the Remittance SDK to initiate a remittance transaction.</li>
     <li>The SDK communicates securely with the MINT backend.</li>
     <li>
-      The backend performs real-time FX rate discovery, invokes NI APIs for AML checks,
+      The backend performs real-time FX rate discovery, invokes APIs for AML and transaction screening checks,
       and consults <strong>Fable</strong>, an external partner, for rail selection.
     </li>
     <li>
@@ -558,8 +558,7 @@
       Fable eliminates dependency on a single provider.
     </li>
     <li>
-      <strong>Embedded Compliance Handling:</strong> AML checks are seamlessly performed via
-      NI APIs as part of the transaction flow.
+      <strong>Embedded Compliance Handling:</strong> SDK handles the responsibility of AML checks as they are part of the transaction flow.
     </li>
     <li>
       <strong>Merchant-Centric Design:</strong> A single SDK integration replaces multiple
@@ -732,7 +731,7 @@ seamlessly by the merchant app. It enables reliable interaction between the merc
 <ol> 
 <li> <strong>Initiation:</strong> The user initiates a remittance through the send remittance button in the issuer mobile app.
  This routes the user to Mint SDK. During this launch the issuer app is verified using client Id and client secret. </li>  
-<li> <strong>User Input:</strong> During this step the user inputs the amount he/she wants to send.</li>
+<li> <strong>User Input:</strong> During this step the user inputs the amount he/she wants to send or receive.</li>
 <li> <strong>AML verification:</strong> After user fills the transaction details, Mint Backend invokes AMLOCK APIs for AML verification. </li>
           <li><strong>Transaction Screening:</strong> Mint Backend calls Falcon APIs in parallel for fraud detection. </li>
 <li> <strong>Balance verification: </strong> Mint Backend invokes NI ecosystem to verify if merchant has sufficient balance for remittance </li>
